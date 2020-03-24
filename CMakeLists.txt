@@ -78,6 +78,7 @@ find_package(graspit)
    SetGraspableBodyPose.srv
    SetRobotPose.srv
    SetBodyPose.srv
+   GetDistance.srv
    GetDynamics.srv
    SetDynamics.srv
    SetRobotDesiredDOF.srv

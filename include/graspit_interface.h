@@ -23,6 +23,7 @@
 #include <graspit_interface/GetRobots.h>
 #include <graspit_interface/GetGraspableBodies.h>
 #include <graspit_interface/GetBodies.h>
+#include <graspit_interface/GetDistance.h>
 #include <graspit_interface/SetDynamics.h>
 #include <graspit_interface/GetDynamics.h>
 #include <graspit_interface/SetGraspableBodyPose.h>
@@ -74,6 +75,7 @@ private:
   ros::ServiceServer setRobotPose_srv;
   ros::ServiceServer setBodyPose_srv;
   ros::ServiceServer setGraspableBodyPose_srv;
+  ros::ServiceServer getDistance_srv;
 
   ros::ServiceServer getDynamics_srv;
   ros::ServiceServer setDynamics_srv;
@@ -142,6 +144,9 @@ private:
 
   bool setBodyPoseCB(graspit_interface::SetBodyPose::Request &request,
                          graspit_interface::SetBodyPose::Response &response);
+
+  bool getDistanceCB(graspit_interface::GetDistance::Request &request,
+                    graspit_interface::GetDistance::Response &response);
 
   bool getDynamicsCB(graspit_interface::GetDynamics::Request &request,
                      graspit_interface::GetDynamics::Response &response);

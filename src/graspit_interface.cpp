@@ -54,7 +54,8 @@ int GraspitInterface::init(int argc, char** argv)
     setRobotPose_srv = nh->advertiseService("setRobotPose", &GraspitInterface::setRobotPoseCB, this);
     setBodyPose_srv = nh->advertiseService("setBodyPose", &GraspitInterface::setBodyPoseCB, this);
     setGraspableBodyPose_srv = nh->advertiseService("setGraspableBodyPose", &GraspitInterface::setGraspableBodyPoseCB, this);
-
+    getDistance_srv = nh->advertiseService("getDistance", &GraspitInterface::getDistanceCB, this);
+    
     getDynamics_srv = nh->advertiseService("getDynamics", &GraspitInterface::getDynamicsCB, this);
     setDynamics_srv = nh->advertiseService("setDynamics", &GraspitInterface::setDynamicsCB, this);
 
@@ -365,6 +366,37 @@ bool GraspitInterface::setBodyPoseCB(graspit_interface::SetBodyPose::Request &re
         graspitCore->getWorld()->getBody(request.id)->setTran(newTransform);
         return true;
     }
+}
+
+bool GraspitInterface::getDistanceCB(graspit_interface::GetDistance::Request &request,
+                    graspit_interface::GetDistance::Response &response)
+{
+    int numBodies = graspitCore->getWorld()->getNumBodies();
+    if ((numBodies <= request.id1) || (numBodies <= request.id2)) {
+        response.result = response.RESULT_INVALID_ID;
+    } else {
+        position p1, p2;
+        double dist = graspitCore->getWorld()->getDist(
+            graspitCore->getWorld()->getBody(request.id1),
+            graspitCore->getWorld()->getBody(request.id2),
+            p1, p2);
+
+        response.distance = dist / 1000.0;
+
+        geometry_msgs::Point point1, point2;
+        point1.x = p1(0) / 1000.0;
+        point1.y = p1(1) / 1000.0;
+        point1.z = p1(2) / 1000.0;
+
+        point2.x = p2(0) / 1000.0;
+        point2.y = p2(1) / 1000.0;
+        point2.z = p2(2) / 1000.0;
+
+        response.p1 = point1;
+        response.p2 = point2;
+        response.result = response.RESULT_SUCCESS;
+    }
+    return true;
 }
 
 bool GraspitInterface::getDynamicsCB(graspit_interface::GetDynamics::Request &request,
