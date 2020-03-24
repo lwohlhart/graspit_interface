@@ -93,6 +93,7 @@ find_package(graspit)
    ClearWorld.srv
    SaveImage.srv
    ToggleAllCollisions.srv
+   ToggleCollisions.srv
    ComputeQuality.srv
    ComputeEnergy.srv
    ApproachToContact.srv

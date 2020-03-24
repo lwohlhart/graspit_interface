@@ -75,6 +75,7 @@ int GraspitInterface::init(int argc, char** argv)
 
     saveImage_srv = nh->advertiseService("saveImage", &GraspitInterface::saveImageCB, this);
     toggleAllCollisions_srv = nh->advertiseService("toggleAllCollisions", &GraspitInterface::toggleAllCollisionsCB, this);
+    toggleCollisions_srv = nh->advertiseService("toggleCollisions", &GraspitInterface::toggleCollisionsCB, this);
 
     computeQuality_srv = nh->advertiseService("computeQuality", &GraspitInterface::computeQualityCB, this);
     computeEnergy_srv = nh->advertiseService("computeEnergy", &GraspitInterface::computeEnergyCB, this);
@@ -635,6 +636,21 @@ bool GraspitInterface::toggleAllCollisionsCB(graspit_interface::ToggleAllCollisi
     else
     {
         ROS_INFO("Collision Detection is Off, objects can interpentrate");
+    }
+    return true;
+}
+
+bool GraspitInterface::toggleCollisionsCB(graspit_interface::ToggleCollisions::Request &request,
+                    graspit_interface::ToggleCollisions::Response &response)
+{
+    int numBodies = graspitCore->getWorld()->getNumBodies();
+    if ((numBodies <= request.id1) || (numBodies <= request.id2)) {
+        response.result = response.RESULT_INVALID_ID;
+    } else {
+        graspitCore->getWorld()->toggleCollisions(request.enableCollisions,
+                graspitCore->getWorld()->getBody(request.id1),
+                graspitCore->getWorld()->getBody(request.id2));
+        response.result = response.RESULT_SUCCESS;
     }
     return true;
 }

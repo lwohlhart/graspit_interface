@@ -1,0 +1,8 @@
+bool enableCollisions
+int32 id1
+int32 id2
+---
+uint8 RESULT_SUCCESS    = 0
+uint8 RESULT_INVALID_ID = 1
+
+uint8 result
